@@ -30,8 +30,13 @@ function App (props) {
     <>
       <h1>Notes</h1>
       <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? 'important' : 'all' }
+        <button style={showAll ?
+           {backgroundColor: 'green'} 
+            : {backgroundColor: 'blue'}}
+
+          onClick={() => setShowAll(!showAll)}>
+          show {showAll ? 'only important' : 'all' }
+
         </button>
       </div>
       <ul>
