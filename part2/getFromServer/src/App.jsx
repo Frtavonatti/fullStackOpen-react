@@ -7,7 +7,7 @@ function App() {
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
 
-  const hook = () => {
+  const getData = () => {
     axios
       .get('http://localhost:3001/notes')
       .then(response => {
@@ -15,8 +15,28 @@ function App() {
       })
   }
   
-  useEffect(hook, [])
+  useEffect(getData, [])
 
+  const handleInputChange = (event) => {
+    setNewNote(event.target.value)
+  }
+
+  const addNote = event => {
+    event.preventDefault()
+    console.log(newNote);
+    const noteObject = {
+      content: newNote,
+      important: Math.random() < 0.5,
+      id: notes.length + 1
+    }
+    // setNotes([...notes, noteObject])
+    axios
+      .post('http://localhost:3001/notes', noteObject)
+      .then(response => {
+          setNotes(notes.concat(response.data))
+        })
+      setNewNote('')
+  }
 
   return (
     <>
@@ -24,6 +44,12 @@ function App() {
       <ul>
         {notes.map((note) => <li key={note.id}> {note.content} </li> )}
       </ul>
+
+    <form>
+      <input value={newNote} onChange={handleInputChange} type="text" />
+      <button onClick={addNote} type="button">Add new</button>
+    </form>
+
     </>
   )
 }

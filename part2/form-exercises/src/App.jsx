@@ -11,13 +11,18 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
 
-  const hook = () => {
+  const getData = () => {
     axios
     .get('http://localhost:3001/persons')
     .then(response => setPersons(response.data))
   }
 
-  useEffect(hook, [])
+  // const postData = () => {
+  //   axios
+  //     .post('http://localhost:3001/persons')
+  // }
+
+  useEffect(getData, [])
 
   const handleSubmit = (event) => {
     event.preventDefault();
