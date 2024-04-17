@@ -1,22 +1,33 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
 import './App.css'
+import { useState, useEffect } from 'react'
 import { Note } from './Components/Note'
+import axios from 'axios'
+import noteService from './services/notes'
 
 function App() {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
 
-  const getData = () => {
-    axios
-      .get('http://localhost:3001/notes')
+  // const getData = () => {
+  //   axios
+  //     .get('http://localhost:3001/notes')
+  //     .then(response => {
+  //       setNotes(response.data)
+  //     })
+  // }
+  // useEffect(getData, [])
+
+  useEffect(() => {
+    noteService
+      .getAll()
       .then(response => {
-        setNotes(response.data)
+        setNotes(response)
       })
-  }
-  
-  useEffect(getData, [])
+      .catch(error => {
+        console.log(error)
+      })
+  }, [])
 
   const handleInputChange = (event) => {
     setNewNote(event.target.value)
@@ -27,7 +38,7 @@ function App() {
     const noteObject = {
       content: newNote,
       important: Math.random() < 0.5,
-      id: notes.length + 1
+      id: (notes.length + 1).toString()
     }
     // setNotes([...notes, noteObject])
     axios
@@ -38,12 +49,24 @@ function App() {
       setNewNote('')
   }
 
+  const deleteNote = (id) => {
+    const updatedNotes = notes.filter(note => note.id !== id)
+
+    axios
+    .delete(`http://localhost:3001/notes/${id}`)
+    .then(response => {
+      console.log(response)
+      setNotes(updatedNotes)
+    })
+  }
+
   const toggleImportanceOf = (id) => {
     const url = `http://localhost:3001/notes/${id}`
     const note = notes.find(n => n.id === id)
     const changedNote = { ...note, important: !note.important }
 
-    axios.put(url, changedNote).then(response => {
+    axios.put(url, changedNote)
+      .then(response => {
       setNotes(notes.map(note => note.id !== id ? note : response.data))
     })
   }
@@ -57,7 +80,8 @@ function App() {
           <Note
           key={i}
           note={note} 
-          style= {note.style} 
+          style= {note.style}
+          deleteNote={() => deleteNote(note.id)} 
           toggleImportance={() => toggleImportanceOf(note.id)}
         />
       )}
