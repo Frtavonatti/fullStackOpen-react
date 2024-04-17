@@ -9,23 +9,11 @@ function App() {
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
 
-  // const getData = () => {
-  //   axios
-  //     .get('http://localhost:3001/notes')
-  //     .then(response => {
-  //       setNotes(response.data)
-  //     })
-  // }
-  // useEffect(getData, [])
-
   useEffect(() => {
     noteService
       .getAll()
       .then(response => {
         setNotes(response)
-      })
-      .catch(error => {
-        console.log(error)
       })
   }, [])
 
@@ -51,11 +39,10 @@ function App() {
 
   const deleteNote = (id) => {
     const updatedNotes = notes.filter(note => note.id !== id)
-
+    
     axios
     .delete(`http://localhost:3001/notes/${id}`)
     .then(response => {
-      console.log(response)
       setNotes(updatedNotes)
     })
   }
@@ -69,13 +56,18 @@ function App() {
       .then(response => {
       setNotes(notes.map(note => note.id !== id ? note : response.data))
     })
+    .catch(error => {
+      alert(
+        `the note '${note.content}' was already deleted from server`
+      )
+      setNotes(notes.filter(n => n.id !== id))
+    })
   }
 
   return (
     <>
       <h1>Notes</h1>
       <ul>
-        {/* {notes.map((note) => <li key={note.id}> {note.content} </li> )} */}
         {notes.map((note, i) => 
           <Note
           key={i}
