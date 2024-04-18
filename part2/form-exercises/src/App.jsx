@@ -16,7 +16,6 @@ const App = () => {
     .get('http://localhost:3001/persons')
     .then(response => setPersons(response.data))
   }
-
   useEffect(getData, [])
 
   const handleSubmit = (event) => {
@@ -28,7 +27,6 @@ const App = () => {
     }
 
     const nameExists = persons.some(person => person.name === newName)
-    
     newName === '' || newNumber === ''
     ? alert('You shoud complete all fields')
     : nameExists 
@@ -40,6 +38,16 @@ const App = () => {
       });
     setNewName('')
     setNewNumber('')
+  }
+
+  const deletePerson = (id) => {
+    const updatedList = persons.filter(p => p.id !== id)
+    axios
+    .delete(`http://localhost:3001/persons/${id}`)
+    .then(response => {
+      console.log(response, id)
+      setPersons(updatedList)
+    })
   }
 
   const handleNameInputChange = (event) => {
@@ -61,7 +69,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Search newSearch={newSearch} handleSearchInputChange={handleSearchInputChange}/>
       <PersonForm newName={newName} newNumber={newNumber} handleNameInputChange={handleNameInputChange} handleNumberInputChange={handleNumberInputChange} handleSubmit={handleSubmit}/>
-      <NumberList persons={persons} filteredPersons={filteredPersons}/>
+      <NumberList persons={persons} filteredPersons={filteredPersons} deletePerson={deletePerson}/>
     </div>
   )
 }
