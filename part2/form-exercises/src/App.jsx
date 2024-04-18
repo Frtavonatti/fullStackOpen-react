@@ -44,10 +44,7 @@ const App = () => {
     const updatedList = persons.filter(p => p.id !== id)
     axios
     .delete(`http://localhost:3001/persons/${id}`)
-    .then(response => {
-      console.log(response, id)
-      setPersons(updatedList)
-    })
+    .then(setPersons(updatedList))
   }
 
   const handleNameInputChange = (event) => {
