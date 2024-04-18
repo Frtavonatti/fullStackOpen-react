@@ -17,11 +17,6 @@ const App = () => {
     .then(response => setPersons(response.data))
   }
 
-  // const postData = () => {
-  //   axios
-  //     .post('http://localhost:3001/persons')
-  // }
-
   useEffect(getData, [])
 
   const handleSubmit = (event) => {
@@ -29,7 +24,7 @@ const App = () => {
     const newPerson = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
+      id: (persons.length + 1).toString() ,
     }
 
     const nameExists = persons.some(person => person.name === newName)
@@ -38,7 +33,11 @@ const App = () => {
     ? alert('You shoud complete all fields')
     : nameExists 
       ? alert(`${newPerson.name} is already added to phonebook`) 
-      : setPersons(persons.concat(newPerson));
+      : axios
+        .post(`http://localhost:3001/persons`, newPerson)
+        .then(response => {
+          setPersons(persons.concat(newPerson))
+      });
     setNewName('')
     setNewNumber('')
   }
