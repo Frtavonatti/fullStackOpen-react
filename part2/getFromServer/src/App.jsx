@@ -1,6 +1,7 @@
 import './App.css'
 import { useState, useEffect } from 'react'
 import { Note } from './Components/Note'
+import { Notification } from './Components/Notification'
 import axios from 'axios'
 import noteService from './services/notes'
 
@@ -8,6 +9,7 @@ function App() {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
+  const [errorMessage, setErrorMessage] = useState('some error happened...')
 
   useEffect(() => {
     noteService
@@ -57,9 +59,12 @@ function App() {
       setNotes(notes.map(note => note.id !== id ? note : response.data))
     })
     .catch(error => {
-      alert(
-        `the note '${note.content}' was already deleted from server`
+      setErrorMessage(
+        `Note '${note.content}' was already removed from server`
       )
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
       setNotes(notes.filter(n => n.id !== id))
     })
   }
@@ -67,6 +72,7 @@ function App() {
   return (
     <>
       <h1>Notes</h1>
+      {/* <Notification message={errorMessage}/> */}
       <ul>
         {notes.map((note, i) => 
           <Note
