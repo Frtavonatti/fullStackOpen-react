@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Search } from './Components/Search'
 import { PersonForm } from './Components/PersonForm'
 import { NumberList } from './Components/NumberList'
+import { Message } from './Components/Message'
 import axios from 'axios'
 
 const App = () => {
@@ -10,6 +11,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
+  const [newMessage, setNewMessage] = useState(null)
+
 
   const getData = () => {
     axios
@@ -35,6 +38,7 @@ const App = () => {
         .post(`http://localhost:3001/persons`, newPerson)
         .then(response => {
           setPersons(persons.concat(newPerson))
+          setNewMessage(`${newName} was added successfully`)
       });
     setNewName('')
     setNewNumber('')
@@ -66,6 +70,9 @@ const App = () => {
       <h2>Phonebook</h2>
       <Search newSearch={newSearch} handleSearchInputChange={handleSearchInputChange}/>
       <PersonForm newName={newName} newNumber={newNumber} handleNameInputChange={handleNameInputChange} handleNumberInputChange={handleNumberInputChange} handleSubmit={handleSubmit}/>
+
+
+      <Message message={newMessage} setMessage={setNewMessage} />
       <NumberList persons={persons} filteredPersons={filteredPersons} deletePerson={deletePerson}/>
     </div>
   )
