@@ -40,6 +40,16 @@ app.get('/api/notes/:id', (request, response) => {
       }
 })
 
+app.post('/api/notes/:id', (request, response) => {
+  const newPost = {
+    id: request.params.id,
+    content: "Test",
+    important: false
+  }
+  notes.push(newPost)
+  response.json(newPost)
+})
+
 app.delete('/api/notes/:id', (request, response) => {
   const id = Number(request.params.id)
   notes = notes.filter(note => note.id !== id)
