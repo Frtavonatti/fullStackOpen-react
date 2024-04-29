@@ -1,5 +1,10 @@
 const express = require('express')
 const app = express()
+// Activemos json-parser: toma los datos JSON de una solicitud, 
+// los transforma en un objeto JavaScript 
+// y luego los adjunta a la propiedad body del objeto request 
+// antes de llamar al controlador de ruta. 
+app.use(express.json())
 
 let notes = [
     {
@@ -40,15 +45,34 @@ app.get('/api/notes/:id', (request, response) => {
       }
 })
 
-app.post('/api/notes/:id', (request, response) => {
-  const newPost = {
-    id: request.params.id,
-    content: "Test",
-    important: false
+const generateId = () => {
+  const maxId = notes.length > 0
+    ? Math.max(...notes.map(n => n.id))
+    : 0
+  return maxId + 1
+}
+
+
+app.post('/api/notes', (request, response) => {
+  const body = request.body
+
+  if (!body.content) {
+    return response.status(400).json({ 
+      error: 'content missing' 
+    })
   }
-  notes.push(newPost)
-  response.json(newPost)
+
+  const note = {
+    content: body.content,
+    important: Boolean(body.important) || false,
+    id: generateId(),
+  }
+
+  notes = notes.concat(note)
+
+  response.json(note)
 })
+
 
 app.delete('/api/notes/:id', (request, response) => {
   const id = Number(request.params.id)
