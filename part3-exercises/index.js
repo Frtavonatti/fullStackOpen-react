@@ -28,6 +28,11 @@ app.get('/', (req, res) => {
     res.send('<h1>Mi first server</h1>')
 })
 
+app.get('/info', (req, res) => {
+    res.send(`<h2> Phonebook has info for ${persons.length} people </h2>
+    <p> ${new Date().toString()} </p>`)
+})
+
 app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
