@@ -1,6 +1,7 @@
-const { error } = require('console')
 const express = require('express')
 const app = express()
+app.use(express.json())
+const { v4: uuidv4 } = require('uuid');
 
 let persons = [
     { 
@@ -55,6 +56,25 @@ app.delete('/api/persons/:id', (req, res) => {
 
     res.status(204).end()
 }) 
+
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+
+    if (!body.name || !body.number) {
+        return res.status(400)
+            .json({ error: 'Nombre y número son campos requeridos.' });
+    }
+
+    const newPerson = {
+        // id: uuidv4(),
+        id: Math.floor(Math.random() * (100 - 1) + 1),
+        name: body.name,
+        number: body.number
+    }
+
+    persons = persons.concat(newPerson)
+    res.json(newPerson)
+})
 
 const PORT = 3001
 app.listen(PORT, () => {
