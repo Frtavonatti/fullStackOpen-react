@@ -63,6 +63,11 @@ app.post('/api/persons', (req, res) => {
     if (!body.name || !body.number) {
         return res.status(400)
             .json({ error: 'Nombre y número son campos requeridos.' });
+    } 
+    
+    if (persons.some(person => person.name === body.name)) {
+        return res.status(400)
+            .json({ error: 'Ya existe una persona con este nombre.' });
     }
 
     const newPerson = {
