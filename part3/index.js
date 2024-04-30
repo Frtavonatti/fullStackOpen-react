@@ -55,6 +55,7 @@ const generateId = () => {
 
 app.post('/api/notes', (request, response) => {
   const body = request.body
+  console.log(body);
 
   if (!body.content) {
     return response.status(400).json({ 
@@ -69,7 +70,6 @@ app.post('/api/notes', (request, response) => {
   }
 
   notes = notes.concat(note)
-
   response.json(note)
 })
 
