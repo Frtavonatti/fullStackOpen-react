@@ -1,7 +1,10 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 app.use(express.json())
-const { v4: uuidv4 } = require('uuid');
+app.use(morgan('tiny'))
+
+// const { v4: uuidv4 } = require('uuid');
 
 let persons = [
     { 
